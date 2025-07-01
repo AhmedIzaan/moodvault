@@ -1,4 +1,3 @@
-# MoodVault/ui_auth.py
 
 import sys
 from PyQt5.QtWidgets import (
@@ -12,6 +11,7 @@ class AuthDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("MoodVault Authentication")
+        self.setMinimumSize(400, 250)
         self.setModal(True) # Blocks interaction with other windows
         self.layout = QVBoxLayout(self)
         
@@ -35,7 +35,7 @@ class LoginDialog(AuthDialog):
     """The dialog window for user login."""
     def setup_ui(self):
         self.setWindowTitle("Login to MoodVault")
-        
+        self.wants_to_register = False
         # Add widgets
         self.layout.addWidget(QLabel("Username:"))
         self.layout.addWidget(self.username_edit)
@@ -53,11 +53,24 @@ class LoginDialog(AuthDialog):
         self.cancel_button = QPushButton("Exit")
         self.cancel_button.clicked.connect(self.reject) # `reject` closes with a "failure" signal
         
+        self.go_to_register_button = QPushButton("Create New Account")
+        self.go_to_register_button.clicked.connect(self.switch_to_register)
+        
+        button_layout.addWidget(self.go_to_register_button)
+        button_layout.addStretch() # Adds space between buttons
+        button_layout.addWidget(self.login_button)
+        self.layout.addLayout(button_layout)
+        
         button_layout.addWidget(self.cancel_button)
         button_layout.addWidget(self.login_button)
         self.layout.addLayout(button_layout)
         
         self.login_button.setDefault(True)
+        
+    def switch_to_register(self): 
+        """Sets the flag and closes the dialog."""
+        self.wants_to_register = True
+        self.reject() # Close the dialog with a "cancel" signal
 
 
 class RegisterDialog(AuthDialog):

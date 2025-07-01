@@ -3,9 +3,9 @@
 import sys
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QCalendarWidget, QToolBar, QAction, QStatusBar
-)
-from PyQt5.QtCore import QDate
+    QTextEdit, QCalendarWidget, QToolBar, QAction, QStatusBar,QLabel,QSizePolicy)
+from PyQt5.QtGui import QColor, QTextCharFormat, QFont
+from PyQt5.QtCore import QDate, Qt
 
 class MainWindow(QMainWindow):
     """
@@ -28,6 +28,7 @@ class MainWindow(QMainWindow):
         self._create_toolbar()
         self._create_central_widget()
         self._create_status_bar()
+        self._style_calendar_weekends()
 
     def _create_main_window_geom(self): # Renamed from _create_main_window
         """Sets up the main window geometry."""
@@ -47,6 +48,15 @@ class MainWindow(QMainWindow):
         toolbar.addAction(self.analyze_action)
         toolbar.addSeparator()
         toolbar.addAction(self.stats_action)
+         # --- ADD THE FOLLOWING ---
+        # Spacer widget to push logout to the right
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        toolbar.addWidget(spacer)
+
+        # Logout action
+        self.logout_action = QAction("Logout", self)
+        toolbar.addAction(self.logout_action)
 
     def _create_central_widget(self):
         """Creates the main layout with calendar and text editor."""
@@ -57,18 +67,40 @@ class MainWindow(QMainWindow):
 
         # --- Left Side (Calendar) ---
         self.calendar = QCalendarWidget()
-        self.calendar.setMaximumDate(QDate.currentDate()) # Can't log for the future
-        self.calendar.setFixedWidth(350) # Give it a fixed width
+        self.calendar.setVerticalHeaderFormat(QCalendarWidget.NoVerticalHeader) # Removes week numbers
+        self.calendar.setMaximumDate(QDate.currentDate())
+        self.calendar.setFixedWidth(400) # Increased width slightly for better look
         
         # --- Right Side (Diary Entry) ---
-        self.editor_layout = QVBoxLayout()
+        self.editor_layout = QVBoxLayout() # Create the vertical layout for the editor side
+        
         self.entry_editor = QTextEdit()
         self.entry_editor.setPlaceholderText("Write your thoughts for the day...")
+        
+        self.mood_label = QLabel("Mood: Not Analyzed")
+        self.mood_label.setObjectName("moodLabel")
+        
+        # Add the editor and the mood label to the right-side layout
         self.editor_layout.addWidget(self.entry_editor)
+        self.editor_layout.addWidget(self.mood_label)
 
-        # Add the two sides to the main layout
+        # --- Assemble the Main Layout ---
+        # Add the calendar widget (left side) and the editor layout (right side)
         self.main_layout.addWidget(self.calendar)
-        self.main_layout.addLayout(self.editor_layout)
+        self.main_layout.addLayout(self.editor_layout) # This line was accidentally duplicated before
+    # Add this entire method inside the MainWindow class in ui/ui.py
+    
+    def _style_calendar_weekends(self):
+        """Applies a custom text format to weekends in the calendar header."""
+        weekend_format = QTextCharFormat()
+        weekend_format.setForeground(QColor("#E57373")) # A nice, soft red
+        font = QFont()
+        font.setBold(True)
+        weekend_format.setFont(font)
+        
+        # Apply the format to Saturday and Sunday
+        self.calendar.setWeekdayTextFormat(Qt.Saturday, weekend_format)
+        self.calendar.setWeekdayTextFormat(Qt.Sunday, weekend_format)
 
     def _create_status_bar(self):
         """Creates a status bar to display mood and other info."""
