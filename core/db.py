@@ -50,6 +50,7 @@ class DatabaseHandler:
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 username VARCHAR(50) UNIQUE NOT NULL,
                 password_hash VARCHAR(255) NOT NULL,
+                encryption_salt BLOB NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB;
             """)
@@ -90,6 +91,23 @@ class DatabaseHandler:
         except Error as e:
             print(f"Error adding user: {e}")
             return False
+        finally:
+            cursor.close()
+            conn.close()
+    def get_first_user_id(self):
+        """Checks if any user exists and returns the first user's ID."""
+        sql = "SELECT id FROM users ORDER BY id LIMIT 1"
+        conn = self._get_connection()
+        if not conn: return None
+
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            result = cursor.fetchone()
+            return result[0] if result else None
+        except Error as e:
+            print(f"Error fetching first user ID: {e}")
+            return None
         finally:
             cursor.close()
             conn.close()
