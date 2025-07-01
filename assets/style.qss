@@ -1,0 +1,214 @@
+/* MoodVault Vintage Theme - style.qss */
+
+/* Overall Window and Dialog Styling */
+QMainWindow, QDialog {
+    background-color: #3E2723; /* Dark, rich espresso brown */
+}
+
+/* General Widget Styling */
+QWidget {
+    color: #F5F5DC; /* Warm, parchment/beige text color */
+    font-family: "Georgia", "Times New Roman", serif; /* Classic serif font */
+    font-size: 14px;
+}
+
+/* Labels */
+QLabel {
+    color: #D7CCC8; /* Lighter, muted brown for non-critical text */
+    padding-bottom: 5px;
+}
+
+/* Text Editor (The Diary) */
+QTextEdit {
+    background-color: #4E342E; /* Slightly lighter brown than the main background */
+    color: #F5F5DC;
+    border: 1px solid #5D4037; /* A subtle border */
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    selection-background-color: #8D6E63; /* Muted color for selected text */
+    selection-color: #FFFFFF;
+}
+
+QTextEdit:focus {
+    border: 1px solid #D4AF37; /* Golden-brass border when active */
+}
+
+/* Line Edits (Username/Password fields) */
+QLineEdit {
+    background-color: #4E342E;
+    border: 1px solid #5D4037;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    selection-background-color: #8D6E63;
+}
+
+QLineEdit:focus {
+    border: 1px solid #D4AF37;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #6D4C41; /* Muted, earthy brown */
+    color: #F5F5DC;
+    border: 1px solid #5D4037;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #795548; /* Slightly lighter on hover */
+    border-color: #8D6E63;
+}
+
+QPushButton:pressed {
+    background-color: #5D4037; /* Darker when pressed */
+}
+
+QPushButton:default {
+    border: 2px solid #D4AF37; /* Default button (e.g., "Login") has a golden border */
+}
+
+/* --- Calendar Widget (Definitive Fix) --- */
+
+/* The main grid of dates */
+QCalendarWidget #qt_calendar_calendarview {
+    background-color: #4E342E; /* The main calendar background */
+    alternate-background-color: #3E2723; /* Not always used, but good to have */
+    gridline-color: #5D4037; /* The lines between the dates */
+    outline: 0px; /* Removes the dotted border on focus */
+}
+
+/* Styling for an individual date cell */
+QCalendarWidget #qt_calendar_calendarview::item {
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* The currently selected date */
+QCalendarWidget #qt_calendar_calendarview::item:selected {
+    background-color: #D4AF37; /* Golden-brass for selected date */
+    color: #3E2723; /* Dark brown text on the selected date */
+}
+
+/* An enabled date in the current month */
+QCalendarWidget #qt_calendar_calendarview::item:enabled {
+    color: #F5F5DC; /* Parchment color for active dates */
+}
+
+/* A disabled date (outside the current month) */
+QCalendarWidget #qt_calendar_calendarview::item:disabled {
+    color: #6D4C41; /* Muted brown for inactive dates */
+}
+
+/* The header bar with weekday names (Sun, Mon, Tue, etc.) */
+QCalendarWidget #qt_calendar_weekday-table {
+    background-color: #3E2723;
+    color: #D7CCC8; /* Muted brown for day names */
+    border-bottom: 1px solid #5D4037;
+    padding: 3px;
+}
+
+/* The top navigation bar (where the month and year are) */
+QCalendarWidget #qt_calendar_navigationbar {
+    background-color: #3E2723;
+    border: 1px solid #5D4037;
+    border-bottom: none; /* Border is on the weekday-table now */
+}
+
+/* The arrow and month/year buttons in the navigation bar */
+QCalendarWidget QToolButton {
+    color: #F5F5DC;
+    background-color: #5D4037;
+    border: 1px solid #6D4C41;
+    font-size: 16px;
+    padding: 8px 12px;
+    margin: 3px;
+    border-radius: 4px;
+}
+QCalendarWidget QToolButton:hover {
+    background-color: #795548;
+}
+QCalendarWidget QToolButton:pressed {
+    background-color: #4E342E;
+}
+
+/* The popup menu for selecting month/year */
+QCalendarWidget QMenu {
+    background-color: #4E342E;
+    border: 1px solid #6D4C41;
+    color: #F5F5DC;
+}
+QCalendarWidget QMenu::item:selected {
+    background-color: #D4AF37;
+    color: #3E2723;
+}
+/* Toolbar Styling */
+QToolBar {
+    background-color: #4E342E;
+    border-bottom: 1px solid #5D4037;
+    padding: 5px;
+}
+
+QToolBar QToolButton {
+    color: #F5F5DC;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+QToolBar QToolButton:hover {
+    background-color: #6D4C41;
+}
+
+/* Status Bar */
+QStatusBar {
+    background-color: #4E342E;
+    color: #D7CCC8;
+}
+
+QStatusBar::item {
+    border: none; /* Remove the default ugly border */
+}
+
+/* Message Box Styling */
+QMessageBox {
+    background-color: #4E342E;
+}
+
+QMessageBox QLabel {
+    color: #F5F5DC;
+    font-size: 15px;
+}
+
+/* Scrollbars for a more vintage feel */
+QScrollBar:vertical {
+    border: 1px solid #5D4037;
+    background: #4E342E;
+    width: 15px;
+    margin: 15px 0 15px 0;
+}
+QScrollBar::handle:vertical {
+    background: #6D4C41;
+    min-height: 20px;
+    border-radius: 3px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* Mood analysis display label */
+#moodLabel {
+    color: #D4AF37; /* Golden-brass color for high visibility */
+    background-color: #4E342E;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #5D4037;
+}
