@@ -1,42 +1,60 @@
+from transformers import pipeline
 
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+# Define the set of emotions the model can predict
+EMOTION_LABELS = {"anger", "disgust", "fear", "joy", "neutral", "sadness", "surprise"}
 
 class SentimentAnalyzer:
     """
-    A wrapper class for VADER sentiment analysis.
-    Provides a simple interface to get a mood label and score.
+    A wrapper class for a sophisticated Hugging Face emotion classification model.
+    Provides a simple interface to get a specific mood label and its confidence score.
     """
     def __init__(self):
-        """Initializes the VADER sentiment analyzer."""
-        self.analyzer = SentimentIntensityAnalyzer()
-
-    def analyze(self, text: str) -> tuple[str, float]:
         """
-        Analyzes the sentiment of a given text.
+        Initializes the emotion classification pipeline.
+        The model is downloaded automatically on the first run.
+        """
+        print("Initializing sentiment analyzer... (This may take a moment on first run)")
+        # We use a specific, well-regarded model fine-tuned for emotion
+        # The 'pipeline' function is a high-level helper from the transformers library
+        self.classifier = pipeline(
+            "text-classification", 
+            model="j-hartmann/emotion-english-distilroberta-base",
+            return_all_scores=True
+        )
+        print("Sentiment analyzer initialized successfully.")
+
+    def analyze(self, text: str) -> tuple[str, float] | tuple[None, None]:
+        """
+        Analyzes the emotional content of a given text.
 
         Args:
             text (str): The text to be analyzed.
 
         Returns:
-            tuple[str, float]: A tuple containing the mood label ('Happy', 'Sad', 'Neutral')
-                               and the compound sentiment score.
+            tuple[str, float]: A tuple containing the dominant mood label (e.g., 'joy', 'anger')
+                               and its confidence score. Returns (None, None) on error.
         """
-        # VADER's polarity_scores returns a dictionary with 'neg', 'neu', 'pos', 'compound' keys
-        scores = self.analyzer.polarity_scores(text)
-        
-        # The 'compound' score is a normalized, weighted composite score.
-        # It's the most useful single metric for overall sentiment.
-        #   Positive sentiment: compound score >= 0.05
-        #   Neutral sentiment: -0.05 < compound score < 0.05
-        #   Negative sentiment: compound score <= -0.05
-        compound_score = scores['compound']
+        if not text.strip():
+            return None, None
 
-        if compound_score >= 0.05:
-            mood_label = "Happy"
-        elif compound_score <= -0.05:
-            mood_label = "Sad"
-        else:
-            mood_label = "Neutral"
+        try:
+            # The classifier returns a list of dictionaries, one for each emotion
+            # e.g., [[{'label': 'sadness', 'score': 0.9...}, {'label': 'joy', 'score': 0.0...}]]
+            scores = self.classifier(text)
             
-        return mood_label, compound_score
+            # The result is nested in a list, so we take the first element
+            if not scores or not scores[0]:
+                return "neutral", 0.0
+
+            # Find the emotion with the highest score
+            dominant_mood = max(scores[0], key=lambda x: x['score'])
+            
+            mood_label = dominant_mood['label'].capitalize()
+            mood_score = dominant_mood['score']
+            
+            return mood_label, mood_score
+
+        except Exception as e:
+            print(f"Error during sentiment analysis: {e}")
+            return None, None
 
