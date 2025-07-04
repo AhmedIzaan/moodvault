@@ -149,6 +149,7 @@ class MoodVaultApp:
         self.main_window.stats_action.triggered.connect(self._show_stats_placeholder) 
         self.main_window.logout_action.triggered.connect(self._logout)
 
+    # In main.py, modify _load_entry_for_date
     def _load_entry_for_date(self):
         """Loads and decrypts a diary entry for the selected date."""
         selected_date = self.main_window.calendar.selectedDate().toPyDate()
@@ -157,21 +158,26 @@ class MoodVaultApp:
         if encrypted_entry:
             decrypted_text = self.enc_handler.decrypt(encrypted_entry)
             self.main_window.entry_editor.setText(decrypted_text)
-            self.main_window.mood_label.setText(f"Saved Mood: {mood_label}") 
+            self.main_window.mood_label.setText(f"Saved Mood: {mood_label}")
+            self._update_editor_style(mood_label) # <-- APPLY THE STYLE ON LOAD
         else:
             self.main_window.entry_editor.clear()
-            self.main_window.mood_label.setText("Mood: Not Analyzed") 
+            self.main_window.mood_label.setText("Mood: Not Analyzed")
+            self._update_editor_style("Neutral") # <-- RESET TO NEUTRAL FOR NEW ENTRIES
 
+    
     def _analyze_mood(self):
-        """Analyzes the current text in the editor and updates the mood label."""
+        """Analyzes the current text in the editor and updates the UI."""
         text = self.main_window.entry_editor.toPlainText()
-        if not text:
-            self.main_window.mood_label.setText("Mood: Cannot analyze empty entry.") 
+        if not text.strip():
+            self.main_window.mood_label.setText("Mood: Cannot analyze empty entry.")
+            self._update_editor_style("Neutral") # Reset to neutral style
             return
-        
-        mood_label, score = self.sentiment_analyzer.analyze(text)
-        self.main_window.mood_label.setText(f"Detected Mood: {mood_label} (Score: {score:.2f})") 
 
+        mood_label, score = self.sentiment_analyzer.analyze(text)
+        self.main_window.mood_label.setText(f"Detected Mood: {mood_label} (Score: {score:.2f})")
+        self._update_editor_style(mood_label) # <-- APPLY THE NEW STYLE
+        
     def _save_entry(self):
         """Encrypts and saves the current entry to the database."""
         text_to_save = self.main_window.entry_editor.toPlainText()
@@ -202,6 +208,19 @@ class MoodVaultApp:
             "Coming Soon!", 
             "The 'View Stats' feature, with beautiful charts of your mood history, is currently under development."
         )
+    
+    def _update_editor_style(self, mood="Neutral"):
+        """
+        Sets a dynamic property on the text editor to change its style based on the mood.
+        """
+        editor = self.main_window.entry_editor
+        
+        # Set the custom 'mood' property
+        editor.setProperty("mood", mood)
+        
+        # Force PyQt to re-evaluate the stylesheet for this widget
+        editor.style().unpolish(editor)
+        editor.style().polish(editor)
 
 
 if __name__ == '__main__':
