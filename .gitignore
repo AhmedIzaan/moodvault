@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller
+/dist/
+/build/
+*.spec
+
+# User-specific data
+moodvault.db
+*.db
+*.sqlite3
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+bin/
+lib/
+include/
+pip-selfcheck.json
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.swp

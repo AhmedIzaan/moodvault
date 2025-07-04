@@ -1,5 +1,6 @@
 
 
+import os
 import sys
 from datetime import date
 from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
@@ -12,6 +13,16 @@ from core.sentiment import SentimentAnalyzer
 from ui.ui_auth import LoginDialog, RegisterDialog
 from ui.ui import MainWindow
 from visuals import StatsDialog
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class MoodVaultApp:
     def __init__(self):
@@ -31,11 +42,12 @@ class MoodVaultApp:
         """Starts the application execution flow."""
         app = QApplication(sys.argv)
         try:
-            with open("assets/style.qss", "r") as f:
+            # Use our new function to get the correct path
+            stylesheet_path = resource_path("assets/style.qss")
+            with open(stylesheet_path, "r") as f:
                 app.setStyleSheet(f.read())
-        except FileNotFoundError:
-            print("Stylesheet 'assets/style.qss' not found.")
-
+        except Exception as e:
+            print(f"Could not load stylesheet: {e}")
         while True: 
             # Reset user state for a fresh login
             self.current_username = None
