@@ -78,7 +78,7 @@ class AuthHandler:
         password_bytes = password.encode('utf-8')
         
         # bcrypt.checkpw handles the comparison securely
-        if bcrypt.checkpw(password_bytes, stored_hash.encode('utf-8')):
+        if bcrypt.checkpw(password_bytes, stored_hash):
             return (True, "Login successful!")
         else:
             return (False, "Invalid username or password.")
