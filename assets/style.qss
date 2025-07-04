@@ -18,20 +18,64 @@ QLabel {
     padding-bottom: 5px;
 }
 
-/* Text Editor (The Diary) */
+/* --- Dynamic Mood-Based Editor Styling --- */
+
+/* Default/Neutral editor style */
 QTextEdit {
-    background-color: #4E342E; /* Slightly lighter brown than the main background */
+    background-color: #4E342E; /* Default slightly lighter brown */
     color: #F5F5DC;
-    border: 1px solid #5D4037; /* A subtle border */
+    border: 1px solid #5D4037;
     border-radius: 4px;
     padding: 10px;
     font-size: 16px;
-    selection-background-color: #8D6E63; /* Muted color for selected text */
+    selection-background-color: #8D6E63;
     selection-color: #FFFFFF;
 }
 
 QTextEdit:focus {
-    border: 1px solid #D4AF37; /* Golden-brass border when active */
+    border: 1px solid #D4AF37;
+}
+
+/* Style for "Joy" mood */
+QTextEdit[mood="Joy"] {
+    background-color: #4A532E; /* A warm, gentle olive green */
+    border-color: #606C38;
+}
+
+/* Style for "Sadness" mood */
+QTextEdit[mood="Sadness"] {
+    background-color: #334257; /* A deep, somber blue */
+    border-color: #476072;
+}
+
+/* Style for "Anger" mood */
+QTextEdit[mood="Anger"] {
+    background-color: #5D2A2A; /* A dark, muted red */
+    border-color: #713838;
+}
+
+/* Style for "Fear" mood */
+QTextEdit[mood="Fear"] {
+    background-color: #46324A; /* A deep, dark purple */
+    border-color: #5A4261;
+}
+
+/* Style for "Surprise" mood */
+QTextEdit[mood="Surprise"] {
+    background-color: #6F4F28; /* A warm, amber/orange tone */
+    border-color: #8A6430;
+}
+
+/* Style for "Disgust" mood */
+QTextEdit[mood="Disgust"] {
+    background-color: #3A4F41; /* A murky, dark green */
+    border-color: #4B6352;
+}
+
+/* Style for "Neutral" mood (can be the same as default) */
+QTextEdit[mood="Neutral"] {
+    background-color: #4E342E;
+    border-color: #5D4037;
 }
 
 /* Line Edits (Username/Password fields) */
