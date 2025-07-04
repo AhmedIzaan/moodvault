@@ -11,6 +11,7 @@ from core.encryption import EncryptionHandler, derive_key
 from core.sentiment import SentimentAnalyzer
 from ui.ui_auth import LoginDialog, RegisterDialog
 from ui.ui import MainWindow
+from visuals import StatsDialog
 
 class MoodVaultApp:
     def __init__(self):
@@ -146,7 +147,7 @@ class MoodVaultApp:
         self.main_window.calendar.selectionChanged.connect(self._load_entry_for_date)
         self.main_window.save_action.triggered.connect(self._save_entry)
         self.main_window.analyze_action.triggered.connect(self._analyze_mood)
-        self.main_window.stats_action.triggered.connect(self._show_stats_placeholder) 
+        self.main_window.stats_action.triggered.connect(self._show_stats)
         self.main_window.logout_action.triggered.connect(self._logout)
 
  
@@ -201,13 +202,23 @@ class MoodVaultApp:
         else:
             QMessageBox.critical(self.main_window, "Error", "Failed to save entry.")
     
-    def _show_stats_placeholder(self):
-        """A placeholder for the mood statistics feature."""
-        QMessageBox.information(
-            self.main_window, 
-            "Coming Soon!", 
-            "The 'View Stats' feature, with beautiful charts of your mood history, is currently under development."
-        )
+
+    def _show_stats(self):
+        """Fetches user data and displays the statistics dialog."""
+        all_entries = self.db_handler.get_all_entries_for_user(self.current_user_id)
+        
+        # We need at least 2 entries to draw a meaningful line chart
+        if len(all_entries) < 2:
+            QMessageBox.information(
+                self.main_window, 
+                "Not Enough Data", 
+                "You need at least two saved entries to view your mood history graphs."
+            )
+            return
+            
+        # Create and show the dialog, passing the data to it
+        stats_dialog = StatsDialog(data=all_entries, parent=self.main_window)
+        stats_dialog.exec_()
     
     def _update_editor_style(self, mood="Neutral"):
         """
