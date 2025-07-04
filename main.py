@@ -25,7 +25,7 @@ class MoodVaultApp:
         self.current_user_id = None
         self.current_username = None
 
-    # In main.py -> replace the existing `run` method
+ 
     def run(self):
         """Starts the application execution flow."""
         app = QApplication(sys.argv)
@@ -35,7 +35,7 @@ class MoodVaultApp:
         except FileNotFoundError:
             print("Stylesheet 'assets/style.qss' not found.")
 
-        while True: # <-- Outer loop for re-authentication
+        while True: 
             # Reset user state for a fresh login
             self.current_username = None
             self.current_user_id = None
@@ -149,7 +149,7 @@ class MoodVaultApp:
         self.main_window.stats_action.triggered.connect(self._show_stats_placeholder) 
         self.main_window.logout_action.triggered.connect(self._logout)
 
-    # In main.py, modify _load_entry_for_date
+ 
     def _load_entry_for_date(self):
         """Loads and decrypts a diary entry for the selected date."""
         selected_date = self.main_window.calendar.selectedDate().toPyDate()
@@ -159,11 +159,11 @@ class MoodVaultApp:
             decrypted_text = self.enc_handler.decrypt(encrypted_entry)
             self.main_window.entry_editor.setText(decrypted_text)
             self.main_window.mood_label.setText(f"Saved Mood: {mood_label}")
-            self._update_editor_style(mood_label) # <-- APPLY THE STYLE ON LOAD
+            self._update_editor_style(mood_label) 
         else:
             self.main_window.entry_editor.clear()
             self.main_window.mood_label.setText("Mood: Not Analyzed")
-            self._update_editor_style("Neutral") # <-- RESET TO NEUTRAL FOR NEW ENTRIES
+            self._update_editor_style("Neutral") 
 
     
     def _analyze_mood(self):
@@ -176,7 +176,7 @@ class MoodVaultApp:
 
         mood_label, score = self.sentiment_analyzer.analyze(text)
         self.main_window.mood_label.setText(f"Detected Mood: {mood_label} (Score: {score:.2f})")
-        self._update_editor_style(mood_label) # <-- APPLY THE NEW STYLE
+        self._update_editor_style(mood_label) 
         
     def _save_entry(self):
         """Encrypts and saves the current entry to the database."""
