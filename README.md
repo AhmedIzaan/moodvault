@@ -69,6 +69,10 @@ If you are a developer and want to run the project from its source code:
 
 ---
 
+> **Note:** The first time you run MoodVault, it may take some time to start. This is because the app uses an offline Hugging Face model for emotion analysis, which is loaded locally on your device. This ensures that all sentiment analysis is performed privately and your journal content never leaves your computer.
+
+---
+
 ## 🖼️ Screenshots
 
 | Login Screen                                       | Statistics & Graphs                                    |
